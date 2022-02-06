@@ -9,6 +9,8 @@ local COVERAGE_COMMAND = "cargo tarpaulin"
 local OUTPUT_OPTIONS = "-o json --output-dir"
 local OUTPUT_PATH = "/tmp/tarpaulin_coverage/"
 
+local SIGN_NAME = "rustCoverage"
+
 --- Global map of file path mapped to table of lines and times a test covered it
 M.SIGN_MAP = {}
 
@@ -98,6 +100,15 @@ function M.generate_coverage(self)
   utils.float_term_cmd(cmd, false, function() self.SIGN_MAP = load_coverage(out_file) end)
 end
 
+--- Clear code coverage sign
+function M.clear_signs(self)
+  self.SIGN_MAP = {}
+
+  vim.fn.sign_undefine(SIGN_NAME)
+
+  M.define_sign()
+end
+
 --- Defines the sign and the autocmd to set them
 function M.setup()
   M.define_sign()
@@ -108,6 +119,7 @@ function M.setup()
       autocmd BufEnter *.rs lua require('rust-coverage'):set_signs()
     augroup END
     command RustCoverage lua require('rust-coverage'):generate_coverage()
+    command RustCoverageClear lua require('rust-coverage'):clear_signs()
   ]])
 end
 

@@ -9,6 +9,8 @@ It will set a `sign` highlighting the covered lines in the source code.
 To generate the coverage information you just need to run the command:
 `:RustCoverage`.
 
+To discard the coverage data and clear the signs `:RustCoverageClear`.
+
 ## Requires
 
 This plugin needs a tool to create the code coverage information:
