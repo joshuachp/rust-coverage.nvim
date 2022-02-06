@@ -54,10 +54,12 @@ local function load_coverage(input)
     local sign_list = {}
 
     for _, value in ipairs(file["traces"]) do
-      local line = value["line"]
-      -- local covered = value["stats"]["Line"]}
+      local coverage = value["stats"]["Line"]
 
-      table.insert(sign_list, make_sign_dictionary(path, line))
+      if coverage > 0 then
+        local line = value["line"]
+        table.insert(sign_list, make_sign_dictionary(path, line))
+      end
     end
 
     sign_map[path] = sign_list
@@ -93,9 +95,7 @@ function M.generate_coverage(self)
   local cmd = string.format("%s %s %s", COVERAGE_COMMAND, OUTPUT_OPTIONS, out_dir)
   local out_file = out_dir .. "/" .. "tarpaulin-report.json"
 
-  utils.float_term_cmd(cmd, false, function()
-    self.SIGN_MAP = load_coverage(out_file)
-  end)
+  utils.float_term_cmd(cmd, false, function() self.SIGN_MAP = load_coverage(out_file) end)
 end
 
 --- Defines the sign and the autocmd to set them
